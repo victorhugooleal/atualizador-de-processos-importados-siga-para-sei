@@ -12,7 +12,5 @@ fs.createReadStream(csvFilePath)
     console.log(`Número Processo SEI: ${row.numero_processo_sei}, Número Processo SIGA: ${row.numero_processo_siga}`);
   })
   .on('end', () => {
-    console.log('CSV file successfully processed');
+    console.log('CSV processado com sucesso');
   });
-
-console.log('Hello, Node.js project!');
