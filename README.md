@@ -13,17 +13,6 @@ Esse projeto é um script que faz a a atualização de processos no siga que for
 3. Instale as dependências do projeto:
     ```sh
     npm install
-    ```
-
-4. Instale o módulo `csv-parser`:
-    ```sh
-    npm install csv-parser
-    ```
-
-5. Instale o módulo `dotenv`:
-    ```sh
-    npm install dotenv
-    ```
 
 6. Crie um arquivo `.env` na raiz do projeto e adicione as seguintes linhas:
     ```dotenv
