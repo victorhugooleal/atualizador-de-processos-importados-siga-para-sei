@@ -54,7 +54,7 @@ fs.createReadStream(csvFilePath)
       });
     } else if (numeroProcessoSiga.startsWith('TRF2')) {
       const novoNumeroProcessoSiga = 'T2' + numeroProcessoSiga.slice(4);
-      query = `CALL inserir_migracao('${novoNumeroProcessoSiga}', '${numeroProcessoSei}')`;
+      query = `CALL inserir_migracao_sei('${novoNumeroProcessoSiga}', '${numeroProcessoSei}')`;
       connection.query(query, (error, results) => {
         if (error) {
           console.error('Erro ao executar a procedure:', error);
