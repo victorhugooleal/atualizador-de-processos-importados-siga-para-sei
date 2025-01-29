@@ -1,5 +1,5 @@
 require('dotenv').config();
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
@@ -11,7 +11,10 @@ const connection = mysql.createConnection({
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  authPlugins: {
+    mysql_native_password: () => () => Buffer.from(process.env.DB_PASSWORD)
+  }
 });
 
 connection.connect((err) => {
@@ -25,7 +28,7 @@ connection.connect((err) => {
 fs.createReadStream(csvFilePath)
   .pipe(csv({ separator: ';' }))
   .on('data', (row) => {
-    const query = `CALL inserir_migracao('${row.numero_processo_siga}', '${row.numero_processo_sei}')`;
+    const query = `CALL inserir_migracao_sei('${row.numero_processo_siga}', '${row.numero_processo_sei}')`;
     connection.query(query, (error, results) => {
       if (error) {
         console.error('Erro ao executar a procedure:', error);
