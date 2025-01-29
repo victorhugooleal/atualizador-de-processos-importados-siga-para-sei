@@ -28,7 +28,11 @@ connection.connect((err) => {
 fs.createReadStream(csvFilePath)
   .pipe(csv({ separator: ';' }))
   .on('data', (row) => {
-    const query = `CALL inserir_migracao_sei('${row.numero_processo_siga}', '${row.numero_processo_sei}')`;
+    const numeroProcessoSiga = row.numero_processo_siga;
+    const numeroProcessoSei = row.numero_processo_sei;
+
+    // Executar a query original
+    let query = `CALL inserir_migracao_sei('${numeroProcessoSiga}', '${numeroProcessoSei}')`;
     connection.query(query, (error, results) => {
       if (error) {
         console.error('Erro ao executar a procedure:', error);
@@ -36,6 +40,29 @@ fs.createReadStream(csvFilePath)
       }
       console.log('Procedure executada com sucesso:', results);
     });
+
+    // Executar a query com tratamento no número do processo SIGA
+    if (numeroProcessoSiga.startsWith('JFRJ')) {
+      const novoNumeroProcessoSiga = 'RJ' + numeroProcessoSiga.slice(4);
+      query = `CALL inserir_migracao_sei('${novoNumeroProcessoSiga}', '${numeroProcessoSei}')`;
+      connection.query(query, (error, results) => {
+        if (error) {
+          console.error('Erro ao executar a procedure:', error);
+          return;
+        }
+        console.log('Procedure executada com sucesso com RJ:', results);
+      });
+    } else if (numeroProcessoSiga.startsWith('TRF2')) {
+      const novoNumeroProcessoSiga = 'T2' + numeroProcessoSiga.slice(4);
+      query = `CALL inserir_migracao('${novoNumeroProcessoSiga}', '${numeroProcessoSei}')`;
+      connection.query(query, (error, results) => {
+        if (error) {
+          console.error('Erro ao executar a procedure:', error);
+          return;
+        }
+        console.log('Procedure executada com sucesso com T2:', results);
+      });
+    }
   })
   .on('end', () => {
     console.log('CSV processado com sucesso');
