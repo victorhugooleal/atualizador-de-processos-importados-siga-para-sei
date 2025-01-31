@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
+const axios = require('axios');
 
 const csvFilePath = path.join(__dirname, 'data.csv');
 
@@ -27,40 +28,64 @@ connection.connect((err) => {
 
 fs.createReadStream(csvFilePath)
   .pipe(csv({ separator: ';' }))
-  .on('data', (row) => {
+  .on('data', async (row) => {
     const numeroProcessoSiga = row.numero_processo_siga;
     const numeroProcessoSei = row.numero_processo_sei;
 
     // Executar a query original
-    let query = `CALL inserir_migracao_sei('${numeroProcessoSiga}-', '${numeroProcessoSei}')`;
-    connection.query(query, (error, results) => {
+    let query = `CALL inserir_migracao_sei('${numeroProcessoSiga}', '${numeroProcessoSei}')`;
+    connection.query(query, async (error, results) => {
       if (error) {
         console.error('Erro ao executar a procedure:', error);
         return;
       }
       console.log('Procedure executada com sucesso:', results);
+
+      // Chamar a URL após executar a procedure
+      try {
+        const response = await axios.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${numeroProcessoSiga}`);
+        console.log('URL chamada com sucesso:', response.data);
+      } catch (error) {
+        console.error('Erro ao chamar a URL:', error);
+      }
     });
 
     // Executar a query com tratamento no número do processo SIGA
     if (numeroProcessoSiga.startsWith('JFRJ')) {
       const novoNumeroProcessoSiga = 'RJ' + numeroProcessoSiga.slice(4);
-      query = `CALL inserir_migracao_sei('${novoNumeroProcessoSiga}-', '${numeroProcessoSei}')`;
-      connection.query(query, (error, results) => {
+      query = `CALL inserir_migracao_sei('${novoNumeroProcessoSiga}', '${numeroProcessoSei}')`;
+      connection.query(query, async (error, results) => {
         if (error) {
           console.error('Erro ao executar a procedure:', error);
           return;
         }
         console.log('Procedure executada com sucesso com RJ:', results);
+
+        // Chamar a URL após executar a procedure
+        try {
+          const response = await axios.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
+          console.log('URL chamada com sucesso com RJ:', response.data);
+        } catch (error) {
+          console.error('Erro ao chamar a URL com RJ:', error);
+        }
       });
     } else if (numeroProcessoSiga.startsWith('TRF2')) {
       const novoNumeroProcessoSiga = 'T2' + numeroProcessoSiga.slice(4);
-      query = `CALL inserir_migracao_sei('${novoNumeroProcessoSiga}-', '${numeroProcessoSei}')`;
-      connection.query(query, (error, results) => {
+      query = `CALL inserir_migracao_sei('${novoNumeroProcessoSiga}', '${numeroProcessoSei}')`;
+      connection.query(query, async (error, results) => {
         if (error) {
           console.error('Erro ao executar a procedure:', error);
           return;
         }
         console.log('Procedure executada com sucesso com T2:', results);
+
+        // Chamar a URL após executar a procedure
+        try {
+          const response = await axios.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
+          console.log('URL chamada com sucesso com T2:', response.data);
+        } catch (error) {
+          console.error('Erro ao chamar a URL com T2:', error);
+        }
       });
     }
   })
