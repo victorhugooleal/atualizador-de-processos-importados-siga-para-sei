@@ -37,13 +37,13 @@ fs.createReadStream(csvFilePath)
     connection.query(query, async (error, results) => {
       if (error) {
         console.error('Erro ao executar a procedure:', error);
-        return;
+        //return;
       }
       console.log('Procedure executada com sucesso:', results);
 
       // Chamar a URL após executar a procedure
       try {
-        const response = await axios.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${numeroProcessoSiga}`);
+        const response = await axios.post(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${numeroProcessoSiga}`);
         console.log('URL chamada com sucesso:', response.data);
       } catch (error) {
         console.error('Erro ao chamar a URL:', error);
@@ -57,13 +57,13 @@ fs.createReadStream(csvFilePath)
       connection.query(query, async (error, results) => {
         if (error) {
           console.error('Erro ao executar a procedure:', error);
-          return;
+          //return;
         }
         console.log('Procedure executada com sucesso com RJ:', results);
 
         // Chamar a URL após executar a procedure
         try {
-          const response = await axios.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
+          const response = await axios.post(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
           console.log('URL chamada com sucesso com RJ:', response.data);
         } catch (error) {
           console.error('Erro ao chamar a URL com RJ:', error);
@@ -75,13 +75,13 @@ fs.createReadStream(csvFilePath)
       connection.query(query, async (error, results) => {
         if (error) {
           console.error('Erro ao executar a procedure:', error);
-          return;
+          //return;
         }
         console.log('Procedure executada com sucesso com T2:', results);
 
         // Chamar a URL após executar a procedure
         try {
-          const response = await axios.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
+          const response = await axios.post(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
           console.log('URL chamada com sucesso com T2:', response.data);
         } catch (error) {
           console.error('Erro ao chamar a URL com T2:', error);
@@ -94,7 +94,7 @@ fs.createReadStream(csvFilePath)
     connection.query('SHOW ERRORS', (error, results) => {
       if (error) {
         console.error('Erro ao mostrar erros:', error);
-        return;
+        //return;
       }
       console.log('Erros:', results);
     });
