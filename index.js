@@ -3,7 +3,6 @@ const mysql = require('mysql2');
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
-const axios = require('axios');
 
 const csvFilePath = path.join(__dirname, 'data.csv');
 
@@ -40,14 +39,6 @@ fs.createReadStream(csvFilePath)
         //return;
       }
       console.log('Procedure executada com sucesso:', results);
-
-      // Chamar a URL após executar a procedure
-      try {
-        const response = await axios.post(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${numeroProcessoSiga}`);
-        console.log('URL chamada com sucesso:', response.data);
-      } catch (error) {
-        console.error('Erro ao chamar a URL:', error);
-      }
     });
 
     // Executar a query com tratamento no número do processo SIGA
@@ -60,14 +51,6 @@ fs.createReadStream(csvFilePath)
           //return;
         }
         console.log('Procedure executada com sucesso com RJ:', results);
-
-        // Chamar a URL após executar a procedure
-        try {
-          const response = await axios.post(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
-          console.log('URL chamada com sucesso com RJ:', response.data);
-        } catch (error) {
-          console.error('Erro ao chamar a URL com RJ:', error);
-        }
       });
     } else if (numeroProcessoSiga.startsWith('TRF2')) {
       const novoNumeroProcessoSiga = 'T2' + numeroProcessoSiga.slice(4);
@@ -78,14 +61,6 @@ fs.createReadStream(csvFilePath)
           //return;
         }
         console.log('Procedure executada com sucesso com T2:', results);
-
-        // Chamar a URL após executar a procedure
-        try {
-          const response = await axios.post(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
-          console.log('URL chamada com sucesso com T2:', response.data);
-        } catch (error) {
-          console.error('Erro ao chamar a URL com T2:', error);
-        }
       });
     }
   })
