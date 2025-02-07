@@ -25,11 +25,21 @@ connection.connect((err) => {
   console.log('Conectado ao banco de dados como id ' + connection.threadId);
 });
 
+function formatNumeroProcessoSiga(numeroProcessoSiga) {
+  const match = numeroProcessoSiga.match(/(\.\d{2})$/);
+  if (!match) {
+    return numeroProcessoSiga + '-';
+  }
+  return numeroProcessoSiga;
+}
+
 fs.createReadStream(csvFilePath)
   .pipe(csv({ separator: ';' }))
   .on('data', async (row) => {
-    const numeroProcessoSiga = row.numero_processo_siga;
+    let numeroProcessoSiga = row.numero_processo_siga;
     const numeroProcessoSei = row.numero_processo_sei;
+
+    numeroProcessoSiga = formatNumeroProcessoSiga(numeroProcessoSiga);
 
     // Executar a query original
     let query = `CALL inserir_migracao_sei('${numeroProcessoSiga}', '${numeroProcessoSei}')`;

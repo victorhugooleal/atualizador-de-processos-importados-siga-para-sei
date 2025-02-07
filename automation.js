@@ -36,27 +36,21 @@ async function runAutomation(data) {
     await login(driver);
 
     for (const row of data) {
-      const numeroProcessoSiga = row.numero_processo_siga;
+      let numeroProcessoSiga = row.numero_processo_siga;
 
       try {
         // Executar a automação original
-        await driver.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/exibir?sigla=${numeroProcessoSiga}`);
-        const link = await driver.findElement(By.css('a[title="Atualizar marcas"]'));
-        await link.click();
+        await driver.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${numeroProcessoSiga}`);
         console.log(`Automação executada com sucesso para ${numeroProcessoSiga}`);
 
         // Executar a automação com tratamento no número do processo SIGA
         if (numeroProcessoSiga.startsWith('JFRJ')) {
           const novoNumeroProcessoSiga = 'RJ' + numeroProcessoSiga.slice(4);
-          await driver.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/exibir?sigla=${novoNumeroProcessoSiga}`);
-          const linkRJ = await driver.findElement(By.css('a[title="Atualizar marcas"]'));
-          await linkRJ.click();
+          await driver.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
           console.log(`Automação executada com sucesso para ${novoNumeroProcessoSiga}`);
         } else if (numeroProcessoSiga.startsWith('TRF2')) {
           const novoNumeroProcessoSiga = 'T2' + numeroProcessoSiga.slice(4);
-          await driver.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/exibir?sigla=${novoNumeroProcessoSiga}`);
-          const linkT2 = await driver.findElement(By.css('a[title="Atualizar marcas"]'));
-          await linkT2.click();
+          await driver.get(`https://siga.jfrj.jus.br/sigaex/app/expediente/doc/atualizar_marcas?sigla=${novoNumeroProcessoSiga}`);
           console.log(`Automação executada com sucesso para ${novoNumeroProcessoSiga}`);
         }
       } catch (error) {
