@@ -9,6 +9,7 @@ const urlMonday = 'https://bi.jfes.jus.br/api/public/dashboard/be1387d7-2cd2-41e
 
 const today = new Date();
 const url = today.getDay() === 1 ? urlMonday : urlDefault;
+console.log(today.getDay());
 
 async function fetchData() {
   try {
